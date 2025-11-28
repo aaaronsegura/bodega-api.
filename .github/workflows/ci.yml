@@ -1,0 +1,45 @@
+name: CI Pipeline (Test & Lint)
+
+# 1. ¿Cuándo se activa? Cuando haces push a la rama main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # 2. Definimos el trabajo de "Pruebas"
+  test-and-analyze:
+    runs-on: ubuntu-latest # Usamos una máquina virtual Linux prestada por GitHub
+
+    steps:
+    # A. Descargar tu código en la máquina virtual
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # B. Preparar PHP 8.2
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, bcmath, pdo, pdo_mysql
+
+    # C. Instalar las librerías (Composer)
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+
+    # D. Crear el archivo .env de prueba
+    - name: Copy .env
+      run: cp .env.example .env
+
+    # E. Generar la llave de encriptación de Laravel
+    - name: Generate Key
+      run: php artisan key:generate
+
+    # F. Ejecutar Análisis Estático (Larastan) - Si esto falla, el pipeline se detiene
+    - name: Run Static Analysis (Larastan)
+      run: ./vendor/bin/phpstan analyse --memory-limit=2G
+
+    # G. Ejecutar Pruebas (PHPUnit) - Usando base de datos en memoria (SQLite)
+    - name: Run Tests (PHPUnit)
+      run: php artisan test
