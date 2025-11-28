@@ -1,6 +1,5 @@
-name: CI Pipeline (Test & Lint)
+name: CI/CD Pipeline
 
-# 1. ¿Cuándo se activa? Cuando haces push a la rama main
 on:
   push:
     branches: [ "main" ]
@@ -8,38 +7,51 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # 2. Definimos el trabajo de "Pruebas"
+  # --- TRABAJO 1: PRUEBAS DE CALIDAD ---
   test-and-analyze:
-    runs-on: ubuntu-latest # Usamos una máquina virtual Linux prestada por GitHub
-
+    runs-on: ubuntu-latest
     steps:
-    # A. Descargar tu código en la máquina virtual
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # B. Preparar PHP 8.4
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.4'
+        php-version: '8.4' # <--- Tu versión correcta
         extensions: mbstring, bcmath, pdo, pdo_mysql
 
-    # C. Instalar las librerías (Composer)
     - name: Install Dependencies
       run: composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
 
-    # D. Crear el archivo .env de prueba
     - name: Copy .env
       run: cp .env.example .env
 
-    # E. Generar la llave de encriptación de Laravel
     - name: Generate Key
       run: php artisan key:generate
 
-    # F. Ejecutar Análisis Estático (Larastan) - Si esto falla, el pipeline se detiene
     - name: Run Static Analysis (Larastan)
       run: ./vendor/bin/phpstan analyse --memory-limit=2G
 
-    # G. Ejecutar Pruebas (PHPUnit) - Usando base de datos en memoria (SQLite)
     - name: Run Tests (PHPUnit)
       run: php artisan test
+
+  # --- TRABAJO 2: CONSTRUCCIÓN Y SUBIDA A DOCKER (NUEVO) ---
+  build-push-docker:
+    needs: test-and-analyze # ¡Solo corre si las pruebas pasan!
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: aarondevops/bodega-api:latest
