@@ -1,0 +1,10 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/
+
+    # Level 5 es un buen equilibrio. El máximo es 9.
+    # Empieza en 5 para que sea exigente pero no frustrante.
+    level: 5
