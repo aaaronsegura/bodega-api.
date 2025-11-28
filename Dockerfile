@@ -1,5 +1,5 @@
 # 1. Usamos una imagen base de PHP con Apache preinstalado
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # 2. Instalamos dependencias del sistema (librerías de Linux necesarias)
 RUN apt-get update && apt-get install -y \
