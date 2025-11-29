@@ -1,0 +1,54 @@
+- name: Desplegar Bodega API
+  hosts: localhost  # Se ejecuta en la misma máquina (tu VM)
+  connection: local
+  become: true      # Actúa como administrador (sudo)
+
+  tasks:
+    # 1. Copiamos el archivo docker-compose
+    - name: Crear archivo docker-compose.yml
+      copy:
+        dest: /home/aaron/docker-compose.yml
+        content: |
+          services:
+            app:
+              image: aarondevops/bodega-api:latest
+              container_name: bodega_app
+              restart: always
+              ports:
+                - "80:80"
+              environment:
+                DB_CONNECTION: mysql
+                DB_HOST: db
+                DB_PORT: 3306
+                DB_DATABASE: bodega_prod
+                DB_USERNAME: root
+                DB_PASSWORD: root_password
+              depends_on:
+                - db
+            
+            db:
+              image: mysql:8.0
+              container_name: bodega_db
+              restart: always
+              environment:
+                MYSQL_ROOT_PASSWORD: root_password
+                MYSQL_DATABASE: bodega_prod
+              volumes:
+                - db_data:/var/lib/mysql
+
+          volumes:
+            db_data:
+
+    # 2. Descargamos la última versión de tu imagen
+    - name: Hacer Pull de la imagen Docker
+      community.general.docker_image:
+        name: aarondevops/bodega-api
+        tag: latest
+        source: pull
+        force_source: yes
+
+    # 3. Levantamos los servicios (Docker Compose Up)
+    - name: Levantar contenedores con Docker Compose
+      command: docker compose up -d
+      args:
+        chdir: /home/aaron

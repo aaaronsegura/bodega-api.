@@ -77,3 +77,15 @@ jobs:
           context: .
           push: true
           tags: aarondevops/bodega-api:latest
+
+
+      # --- TRABAJO 3: DESPLIEGUE EN VM LOCAL (ANSIBLE) ---
+  deploy-to-vm:
+    needs: build-push-docker # Espera a que se construya la imagen
+    runs-on: self-hosted     # <--- ¡LA MAGIA! Corre en tu PC
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Ansible Playbook
+        run: ansible-playbook deploy.yml    
