@@ -13,7 +13,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-      return Product::all();  //
+       return [
+    'mensaje' => 'API Actualizada con Ansible 🚀',
+    'datos' => Product::all()
+]; //
     }
 
     /**
