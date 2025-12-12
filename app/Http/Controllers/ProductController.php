@@ -13,7 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-      return Product::orderBy('price', 'asc')->get(); //
+      return Product::all(); //
     }
 
     /**

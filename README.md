@@ -1,15 +1,15 @@
-# 📦 Bodega API - Proyecto Final DevOps
+#  Bodega API - Proyecto Final DevOps
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen) ![PHP](https://img.shields.io/badge/PHP-8.4-777BB4) ![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20) ![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED)
 
-## 📖 Descripción
+##  Descripción
 Este proyecto consiste en una **API RESTful** para la gestión de inventario, desarrollada con una arquitectura de microservicios y un flujo de trabajo **DevOps completo**.
 
 El objetivo principal no es solo la gestión de productos, sino la implementación de un pipeline de **Integración y Despliegue Continuo (CI/CD)** que garantiza calidad, seguridad y automatización desde el código hasta la producción.
 
 ---
 
-## 🛠️ Stack Tecnológico
+##  Stack Tecnológico
 
 * **Backend:** Laravel 11 (PHP 8.4)
 * **Base de Datos:** MySQL 8.0 (Contenerizada)
@@ -21,19 +21,19 @@ El objetivo principal no es solo la gestión de productos, sino la implementaci�
 
 ---
 
-## ⚙️ Arquitectura del Pipeline (CI/CD)
+##  Arquitectura del Pipeline (CI/CD)
 
 Cada vez que se realiza un `git push` a la rama `main`, se dispara un flujo automatizado en GitHub Actions:
 
-1.  **🧪 Fase de Test:**
+1.  **  Fase de Test:**
     * Instalación de dependencias.
     * Análisis estático de código con **Larastan**.
     * Ejecución de pruebas unitarias con **PHPUnit**.
-2.  **🏗️ Fase de Build & Security:**
+2.  ** Fase de Build & Security:**
     * Construcción de la imagen Docker optimizada.
     * Escaneo de vulnerabilidades críticas (CVEs) con **Trivy**.
     * Subida de la imagen a **Docker Hub** (`aarondevops/bodega-api`).
-3.  **🚀 Fase de Deploy:**
+3.  ** Fase de Deploy:**
     * Activación del **Self-Hosted Runner** en el servidor local.
     * Ejecución de Playbook de **Ansible**.
     * Descarga de la nueva imagen y reinicio de contenedores sin tiempo de inactividad (Zero Downtime deployment).
@@ -52,6 +52,6 @@ La API expone los siguientes recursos:
 
 ---
 
-## 👨‍💻 Autor
+##  Autor
 **Aaron Segura**
 *Proyecto de Título / Evaluación Final - 2025*
