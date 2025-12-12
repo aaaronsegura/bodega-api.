@@ -54,4 +54,4 @@ La API expone los siguientes recursos:
 
 ##  Autor
 **Aaron Segura**
-*Proyecto de Título / Evaluación Final - 2025*
+*Proyecto Transformación Digital  / Evaluación Final - 2025*
